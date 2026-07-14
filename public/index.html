@@ -14,11 +14,7 @@
     --bone: #EDE8DC; --bone-dim: #A79F92; --gold: #C9A15A; --gold-soft: #8A6E3C; --ember: #C33B2E; --sage: #7A9B76;
   }
   * { box-sizing: border-box; margin: 0; }
-  body {
-    background: var(--bg); color: var(--bone);
-    font-family: 'Source Sans 3', system-ui, sans-serif;
-    min-height: 100vh; display: flex; flex-direction: column;
-  }
+  body { background: var(--bg); color: var(--bone); font-family: 'Source Sans 3', system-ui, sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
   .display { font-family: 'Marcellus', Georgia, serif; }
   button { font-family: inherit; }
 
@@ -30,53 +26,41 @@
   body.thinking .eye .ring1 { animation: pulse 1.6s ease-in-out infinite; }
   body.thinking .eye .core { box-shadow: 0 0 14px var(--gold); }
   @keyframes pulse { 0%,100% { transform: scale(1); opacity: .9 } 50% { transform: scale(1.18); opacity: .35 } }
-  @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 
   header h1 { font-size: 20px; letter-spacing: .08em; }
   header .sub { font-size: 12px; color: var(--bone-dim); }
-  .hbtns { margin-left: auto; display: flex; gap: 8px; }
+  .hbtns { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
   .hbtn { font-size: 12px; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--line); background: none; color: var(--bone-dim); cursor: pointer; }
-  .hbtn.gold { border-color: var(--gold-soft); color: var(--gold); }
   .badge { display: inline-block; min-width: 16px; padding: 0 4px; margin-left: 5px; border-radius: 8px; background: var(--gold); color: #171308; font-size: 10px; font-weight: 600; text-align: center; }
+  #db-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; margin-right: 4px; background: var(--bone-dim); vertical-align: middle; }
+  #db-dot.on { background: var(--sage); }
 
   main { flex: 1; overflow-y: auto; }
   .wrap { max-width: 640px; margin: 0 auto; padding: 24px 16px; }
   .view { display: none; }
   .view.active { display: block; }
 
-  /* Home */
-  #home .lead { font-size: 26px; color: var(--gold); line-height: 1.3; margin-bottom: 6px; }
-  #home .desc { font-size: 14px; color: var(--bone-dim); margin-bottom: 20px; }
-  .session {
-    width: 100%; text-align: left; display: flex; align-items: center; gap: 12px;
-    padding: 14px 16px; margin-bottom: 10px; border-radius: 8px;
-    background: var(--panel-soft); border: 1px solid var(--line); color: var(--bone); cursor: pointer;
-  }
+  .lead { font-size: 26px; color: var(--gold); line-height: 1.3; margin-bottom: 6px; }
+  .desc { font-size: 14px; color: var(--bone-dim); margin-bottom: 20px; }
+
+  .session { width: 100%; text-align: left; display: flex; align-items: center; gap: 12px; padding: 14px 16px; margin-bottom: 10px; border-radius: 8px; background: var(--panel-soft); border: 1px solid var(--line); color: var(--bone); cursor: pointer; }
   .session:hover { border-color: var(--gold-soft); }
   .session .t { font-size: 15px; }
   .session .m { font-size: 12px; color: var(--bone-dim); margin-top: 2px; }
   .session .del { margin-left: auto; background: none; border: none; color: var(--bone-dim); font-size: 16px; cursor: pointer; padding: 4px 8px; }
   .session .del:hover { color: var(--ember); }
-  .btn-primary {
-    width: 100%; padding: 13px; margin-top: 12px; font-size: 15px; letter-spacing: .14em; text-transform: uppercase;
-    font-family: 'Marcellus', Georgia, serif; border: none; border-radius: 6px;
-    background: var(--gold); color: #171308; cursor: pointer;
-  }
+  .btn-primary { width: 100%; padding: 13px; margin-top: 12px; font-size: 15px; letter-spacing: .14em; text-transform: uppercase; font-family: 'Marcellus', Georgia, serif; border: none; border-radius: 6px; background: var(--gold); color: #171308; cursor: pointer; }
   .btn-primary:disabled { background: var(--panel-soft); color: #5B5546; cursor: not-allowed; }
   .empty { font-size: 14px; color: var(--bone-dim); padding: 20px 0; font-style: italic; }
 
-  /* Setup */
   .field { display: block; margin-bottom: 16px; }
   .field span { display: block; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--bone-dim); margin-bottom: 4px; }
-  .field input, .field textarea, .field select {
-    width: 100%; padding: 9px 12px; font-size: 14px; font-family: inherit;
-    background: var(--panel-soft); border: 1px solid var(--line); border-radius: 6px; color: var(--bone); outline: none; resize: none;
-  }
+  .field input, .field textarea, .field select { width: 100%; padding: 9px 12px; font-size: 14px; font-family: inherit; background: var(--panel-soft); border: 1px solid var(--line); border-radius: 6px; color: var(--bone); outline: none; resize: none; }
   .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--gold-soft); }
   ::placeholder { color: #6B6455; }
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-  /* Chat */
   .msg-user { display: flex; justify-content: flex-end; margin-bottom: 20px; }
   .msg-user .bubble { max-width: 85%; padding: 10px 16px; font-size: 14px; white-space: pre-wrap; background: var(--panel-soft); border: 1px solid var(--line); border-radius: 8px; }
   .msg-oracle { display: flex; gap: 12px; margin-bottom: 20px; }
@@ -100,6 +84,7 @@
   .cmds button { flex-shrink: 0; font-size: 12px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--gold-soft); background: none; color: var(--gold); cursor: pointer; }
   .cmds button:disabled { opacity: .4; cursor: default; }
   .cmds button.util { border-color: var(--line); color: var(--bone-dim); }
+  .cmds button.duel { border-color: var(--ember); color: #E06A5E; }
   .inputrow { display: flex; gap: 8px; }
   #input { flex: 1; padding: 11px 12px; font-size: 14px; font-family: inherit; background: var(--panel-soft); border: 1px solid var(--line); border-radius: 6px; color: var(--bone); outline: none; resize: none; }
   #input:focus { border-color: var(--gold-soft); }
@@ -108,10 +93,7 @@
 
   /* Flashcards */
   #cards .deck-info { font-size: 13px; color: var(--bone-dim); margin-bottom: 16px; }
-  .card {
-    min-height: 220px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
-    padding: 28px 22px; border-radius: 10px; background: var(--panel-soft); border: 1px solid var(--gold-soft); cursor: pointer;
-  }
+  .card { min-height: 220px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 28px 22px; border-radius: 10px; background: var(--panel-soft); border: 1px solid var(--gold-soft); cursor: pointer; }
   .card .side { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--bone-dim); margin-bottom: 12px; }
   .card .content { font-size: 17px; line-height: 1.5; }
   .card.back .content { color: var(--gold); }
@@ -122,7 +104,35 @@
   .done .big { font-size: 22px; color: var(--gold); margin-bottom: 8px; }
   .done p { font-size: 14px; color: var(--bone-dim); }
 
-  /* PDF / impressão */
+  /* ===== Modo Duelo ===== */
+  #duel .hud { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 13px; color: var(--bone-dim); }
+  #duel .hud .score { font-family: 'Marcellus', Georgia, serif; font-size: 20px; color: var(--gold); }
+  #duel .hud .streak { color: #E06A5E; font-weight: 600; }
+  .timerbar { height: 6px; border-radius: 3px; background: var(--panel-soft); overflow: hidden; margin-bottom: 20px; }
+  .timerbar .fill { height: 100%; width: 100%; background: linear-gradient(90deg, var(--gold), var(--ember)); transition: width .1s linear; }
+  .duel-q { font-size: 18px; line-height: 1.5; margin-bottom: 18px; font-family: 'Marcellus', Georgia, serif; }
+  .opt { width: 100%; text-align: left; display: flex; gap: 10px; align-items: baseline; padding: 13px 16px; margin-bottom: 10px; border-radius: 8px; background: var(--panel-soft); border: 1px solid var(--line); color: var(--bone); font-size: 15px; cursor: pointer; }
+  .opt:hover:not(:disabled) { border-color: var(--gold-soft); }
+  .opt:disabled { cursor: default; opacity: .75; }
+  .opt .letter { font-family: 'Marcellus', Georgia, serif; color: var(--gold); }
+  .opt.right { border-color: var(--sage); background: rgba(122,155,118,.12); opacity: 1; }
+  .opt.wrong { border-color: var(--ember); background: rgba(195,59,46,.12); opacity: 1; }
+  .duel-why { display: none; font-size: 14px; color: var(--bone-dim); border-left: 2px solid var(--gold-soft); padding-left: 12px; margin: 6px 0 14px; }
+  .duel-next { display: none; }
+  .duel-center { text-align: center; padding: 30px 0; }
+  .duel-center .title { font-size: 30px; color: var(--gold); margin-bottom: 6px; letter-spacing: .06em; }
+  .duel-center .rank { font-size: 64px; line-height: 1; color: var(--gold); margin: 18px 0 4px; }
+  .duel-center .sub2 { font-size: 14px; color: var(--bone-dim); margin-bottom: 20px; }
+  .duel-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 0 0 20px; }
+  .duel-stats div { background: var(--panel-soft); border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
+  .duel-stats .n { font-family: 'Marcellus', Georgia, serif; font-size: 22px; color: var(--gold); }
+  .duel-stats .l { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--bone-dim); }
+  .duel-gaps { text-align: left; margin-bottom: 20px; }
+  .duel-gaps h3 { font-family: 'Marcellus', Georgia, serif; font-size: 15px; color: var(--ember); margin-bottom: 10px; letter-spacing: .06em; }
+  .duel-gaps .g { font-size: 14px; color: var(--bone-dim); border-left: 2px solid var(--ember); padding-left: 12px; margin-bottom: 12px; }
+  .duel-gaps .g b { color: var(--bone); display: block; margin-bottom: 2px; font-weight: 600; }
+
+  /* Impressão */
   #print-area { display: none; }
   @media print {
     body * { visibility: hidden; }
@@ -144,7 +154,7 @@
   <div class="eye" id="btn-home" title="Início"><div class="ring1"></div><div class="ring2"></div><div class="core"></div></div>
   <div>
     <h1 class="display">O ORÁCULO</h1>
-    <p class="sub" id="subtitle">Cinco mentes. Um mentor.</p>
+    <p class="sub"><span id="db-dot"></span><span id="subtitle">Cinco mentes. Um mentor.</span></p>
   </div>
   <div class="hbtns">
     <button class="hbtn" id="btn-review" style="display:none">Revisar<span class="badge" id="due-badge">0</span></button>
@@ -154,18 +164,16 @@
 </header>
 
 <main>
-  <!-- HOME -->
   <div class="wrap view active" id="home">
     <p class="lead display">Seus Oráculos.</p>
-    <p class="desc">Cada tema tem seu próprio mentor, com memória da sessão e plano de domínio.</p>
+    <p class="desc" id="home-desc">Cada tema tem seu próprio mentor, com memória da sessão e plano de domínio.</p>
     <div id="session-list"></div>
     <button class="btn-primary" id="btn-new">Novo Oráculo</button>
   </div>
 
-  <!-- SETUP -->
   <div class="wrap view" id="setup">
-    <p class="lead display" style="font-size:26px;color:var(--gold);margin-bottom:8px;">Diga o que quer dominar.</p>
-    <p class="desc" style="font-size:14px;color:var(--bone-dim);margin-bottom:24px;">O Oráculo revela o oculto, traça o caminho mais curto, ensina por perguntas e só libera avanço quando o domínio é real.</p>
+    <p class="lead display">Diga o que quer dominar.</p>
+    <p class="desc">O Oráculo revela o oculto, traça o caminho mais curto, ensina por perguntas e só libera avanço quando o domínio é real.</p>
     <label class="field"><span>Tema</span><input id="f-tema" placeholder="ex.: Tráfego pago no Instagram (Meta Ads)" /></label>
     <label class="field"><span>Por que quero dominar</span><textarea id="f-objetivo" rows="2" placeholder="ex.: rodar campanhas pros meus clientes sem queimar orçamento"></textarea></label>
     <div class="grid2">
@@ -181,17 +189,19 @@
     <button class="btn-primary" id="btn-begin" disabled>Consultar o Oráculo</button>
   </div>
 
-  <!-- CHAT -->
   <div class="wrap view" id="chat">
     <div id="messages"></div>
     <div id="error"><span id="error-text"></span> <button id="btn-retry">Tentar de novo</button></div>
     <div id="end"></div>
   </div>
 
-  <!-- FLASHCARDS -->
   <div class="wrap view" id="cards">
     <p class="deck-info" id="deck-info"></p>
     <div id="card-stage"></div>
+  </div>
+
+  <div class="wrap view" id="duel">
+    <div id="duel-stage"></div>
   </div>
 </main>
 
@@ -210,7 +220,6 @@
 <script>
 const $ = (id) => document.getElementById(id);
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-
 marked.setOptions({ breaks: true, gfm: true });
 const md = (raw) => DOMPurify.sanitize(marked.parse(raw || ""));
 
@@ -241,7 +250,7 @@ Sua missão não é me dar respostas certas — é me fazer pensar como um espec
 
 FASE 0 — DIAGNÓSTICO. Antes de qualquer coisa, faça até 3 perguntas para calibrar meu nível real e meu objetivo. Não confie apenas no que declarei — pessoas superestimam o próprio nível.
 
-FASE 1 — REVELAÇÃO. Entregue o mapa oculto do tema: os 5 atalhos que quem domina usa no dia a dia mas raramente documenta; os 3 erros que a maioria comete porque aprendeu pela teoria sem prática real; a pergunta que ninguém faz sobre esse tema mas que muda tudo quando é respondida; o conceito contraintuitivo que parece errado mas separa quem é bom de quem é excelente.
+FASE 1 — REVELAÇÃO. Entregue o mapa oculto do tema: os 5 atalhos que quem domina esse tema usa no dia a dia mas raramente documenta; os 3 erros que a maioria comete porque aprendeu pela teoria sem prática real; a pergunta que ninguém faz sobre esse tema mas que muda tudo quando é respondida; o conceito contraintuitivo que parece errado mas separa quem é bom de quem é excelente.
 
 FASE 2 — PLANO DE DOMÍNIO. Crie o caminho mais curto: os 3 conceitos que cobrem 80% das situações reais; a sequência correta de aprendizado para o meu objetivo específico; o exercício prático que posso fazer HOJE com o que já sei; o sinal objetivo que indica que dominei cada etapa antes de avançar.
 
@@ -269,27 +278,89 @@ FASE 4 — TESTE DE CONHECIMENTO REAL. Ao final de cada etapa, me teste em 3 ní
 7. Use markdown na formatação: títulos, negrito e listas quando ajudarem a clareza.
 8. Responda sempre em português brasileiro, de forma direta e sem enrolação. Comece agora ativando a FASE 0.`;
 
-// ---------- Estado + armazenamento ----------
-const store = {
-  get sessions() { try { return JSON.parse(localStorage.getItem("oraculo.sessions")) || []; } catch { return []; } },
-  set sessions(v) { localStorage.setItem("oraculo.sessions", JSON.stringify(v)); },
-  get cards() { try { return JSON.parse(localStorage.getItem("oraculo.cards")) || []; } catch { return []; } },
-  set cards(v) { localStorage.setItem("oraculo.cards", JSON.stringify(v)); },
+/* ============ ARMAZENAMENTO: Postgres (nuvem) com fallback local ============ */
+let useDb = false;
+
+const localStore = {
+  read(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
+  write(k, v) { localStorage.setItem(k, JSON.stringify(v)); },
 };
 
-let current = null;   // sessão ativa
+const Store = {
+  async listSessions() {
+    if (useDb) {
+      const r = await fetch("/api/sessions").then((x) => x.json());
+      return (r.sessions || []).map((s) => ({ id: s.id, ctx: s.ctx, duel_best: s.duel_best, updatedAt: Number(s.updated_at), msgCount: Number(s.msg_count) }));
+    }
+    return localStore.read("oraculo.sessions", []).map((s) => ({ ...s, msgCount: s.messages.length }));
+  },
+  async getSession(id) {
+    if (useDb) {
+      const r = await fetch(`/api/sessions/${id}`).then((x) => x.json());
+      if (!r.session) return null;
+      const s = r.session;
+      return { id: s.id, ctx: s.ctx, messages: s.messages || [], duel_best: s.duel_best || 0, createdAt: Number(s.created_at), updatedAt: Number(s.updated_at) };
+    }
+    return localStore.read("oraculo.sessions", []).find((s) => s.id === id) || null;
+  },
+  async saveSession(s) {
+    s.updatedAt = Date.now();
+    if (useDb) {
+      await fetch("/api/sessions", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: s.id, ctx: s.ctx, messages: s.messages, duel_best: s.duel_best || 0, created_at: s.createdAt, updated_at: s.updatedAt }),
+      });
+      return;
+    }
+    const all = localStore.read("oraculo.sessions", []).filter((x) => x.id !== s.id);
+    all.unshift(s);
+    localStore.write("oraculo.sessions", all);
+  },
+  async deleteSession(id) {
+    if (useDb) { await fetch(`/api/sessions/${id}`, { method: "DELETE" }); return; }
+    localStore.write("oraculo.sessions", localStore.read("oraculo.sessions", []).filter((x) => x.id !== id));
+    localStore.write("oraculo.cards", localStore.read("oraculo.cards", []).filter((c) => c.sessionId !== id));
+  },
+  async listDueCards() {
+    if (useDb) {
+      const r = await fetch("/api/cards?due=1").then((x) => x.json());
+      return (r.cards || []).map((c) => ({ ...c, sessionId: c.session_id, due: Number(c.due) }));
+    }
+    return localStore.read("oraculo.cards", []).filter((c) => c.due <= Date.now());
+  },
+  async addCards(cards) {
+    if (useDb) {
+      await fetch("/api/cards", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ cards }) });
+      return;
+    }
+    localStore.write("oraculo.cards", [...localStore.read("oraculo.cards", []), ...cards]);
+  },
+  async updateCard(c) {
+    if (useDb) {
+      await fetch(`/api/cards/${c.id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ due: c.due, ivl: c.ivl, ease: c.ease, reps: c.reps }) });
+      return;
+    }
+    localStore.write("oraculo.cards", localStore.read("oraculo.cards", []).map((x) => (x.id === c.id ? c : x)));
+  },
+};
+
+// Migra dados do navegador para o Postgres na primeira vez
+async function migrateLocalToDb() {
+  if (!useDb || localStore.read("oraculo.migrated", false)) return;
+  const sessions = localStore.read("oraculo.sessions", []);
+  const cards = localStore.read("oraculo.cards", []);
+  try {
+    for (const s of sessions) await Store.saveSession(s);
+    if (cards.length) await Store.addCards(cards.map((c) => ({ ...c, ivl: c.ivl ?? c.interval ?? 0 })));
+    localStore.write("oraculo.migrated", true);
+  } catch {}
+}
+
+/* ============ Estado + navegação ============ */
+let current = null;
 let loading = false;
 let reviewQueue = [];
 
-function saveCurrent() {
-  if (!current) return;
-  current.updatedAt = Date.now();
-  const all = store.sessions.filter((s) => s.id !== current.id);
-  all.unshift(current);
-  store.sessions = all;
-}
-
-// ---------- Navegação ----------
 function show(view) {
   document.querySelectorAll(".view").forEach((v) => v.classList.remove("active"));
   $(view).classList.add("active");
@@ -301,12 +372,17 @@ function show(view) {
   refreshDueBadge();
 }
 $("btn-home").addEventListener("click", () => show("home"));
-$("btn-back").addEventListener("click", () => show(current && $("cards").classList.contains("active") ? "chat" : "home"));
+$("btn-back").addEventListener("click", () => {
+  const inSub = $("cards").classList.contains("active") || $("duel").classList.contains("active");
+  show(inSub && current ? "chat" : "home");
+});
 
-// ---------- Home ----------
-function renderHome() {
+/* ============ Home ============ */
+async function renderHome() {
   const list = $("session-list");
-  const sessions = store.sessions;
+  list.innerHTML = '<p class="empty">Consultando a memória…</p>';
+  let sessions = [];
+  try { sessions = await Store.listSessions(); } catch { sessions = []; }
   list.innerHTML = "";
   if (!sessions.length) {
     list.innerHTML = '<p class="empty">Nenhum Oráculo ainda. Invoque o primeiro.</p>';
@@ -316,14 +392,14 @@ function renderHome() {
     const el = document.createElement("div");
     el.className = "session";
     const dt = new Date(s.updatedAt).toLocaleDateString("pt-BR");
-    el.innerHTML = `<div><div class="t"></div><div class="m">${s.messages.length} mensagens · ${dt}</div></div><button class="del" title="Apagar">×</button>`;
+    const best = s.duel_best ? ` · ⚔️ ${s.duel_best}` : "";
+    el.innerHTML = `<div><div class="t"></div><div class="m">${s.msgCount} mensagens · ${dt}${best}</div></div><button class="del" title="Apagar">×</button>`;
     el.querySelector(".t").textContent = s.ctx.tema;
     el.addEventListener("click", () => openSession(s.id));
-    el.querySelector(".del").addEventListener("click", (e) => {
+    el.querySelector(".del").addEventListener("click", async (e) => {
       e.stopPropagation();
       if (!confirm(`Apagar o Oráculo de "${s.ctx.tema}"?`)) return;
-      store.sessions = store.sessions.filter((x) => x.id !== s.id);
-      store.cards = store.cards.filter((c) => c.sessionId !== s.id);
+      await Store.deleteSession(s.id);
       renderHome(); refreshDueBadge();
     });
     list.appendChild(el);
@@ -335,7 +411,7 @@ $("btn-new").addEventListener("click", () => {
   show("setup");
 });
 
-// ---------- Setup ----------
+/* ============ Setup ============ */
 function readCtx() {
   return {
     tema: $("f-tema").value.trim(),
@@ -352,19 +428,20 @@ function readCtx() {
     $("btn-begin").disabled = !(c.tema && c.objetivo);
   })
 );
-$("btn-begin").addEventListener("click", () => {
+$("btn-begin").addEventListener("click", async () => {
   const c = readCtx();
   if (!c.tema || !c.objetivo) return;
-  current = { id: uid(), ctx: c, messages: [], createdAt: Date.now(), updatedAt: Date.now() };
+  current = { id: uid(), ctx: c, messages: [], duel_best: 0, createdAt: Date.now(), updatedAt: Date.now() };
   current.messages.push({ role: "user", content: "Estou pronto. Ative a FASE 0 e inicie o diagnóstico." });
-  saveCurrent();
+  Store.saveSession(current).catch(() => {});
   openChat();
   consult();
 });
 
-function openSession(id) {
-  current = store.sessions.find((s) => s.id === id);
-  if (!current) return;
+async function openSession(id) {
+  const s = await Store.getSession(id);
+  if (!s) return;
+  current = s;
   openChat();
 }
 function openChat() {
@@ -373,15 +450,20 @@ function openChat() {
   renderMessages();
 }
 
-// ---------- Chat ----------
+/* ============ Chat ============ */
 COMMANDS.forEach((cmd) => {
   const b = document.createElement("button");
   b.textContent = cmd;
   b.addEventListener("click", () => send(cmd));
   $("cmds").appendChild(b);
 });
+const duelBtn = document.createElement("button");
+duelBtn.textContent = "⚔️ Duelo";
+duelBtn.className = "duel";
+duelBtn.addEventListener("click", startDuel);
+$("cmds").appendChild(duelBtn);
 const flashBtn = document.createElement("button");
-flashBtn.textContent = "🃏 Gerar flashcards";
+flashBtn.textContent = "🃏 Flashcards";
 flashBtn.className = "util";
 flashBtn.addEventListener("click", generateCards);
 $("cmds").appendChild(flashBtn);
@@ -392,13 +474,9 @@ function setLoading(v) {
   document.querySelectorAll(".cmds button").forEach((b) => (b.disabled = v));
   refreshSend();
 }
-function refreshSend() {
-  $("btn-send").classList.toggle("ready", !loading && !!$("input").value.trim());
-}
+function refreshSend() { $("btn-send").classList.toggle("ready", !loading && !!$("input").value.trim()); }
 $("input").addEventListener("input", refreshSend);
-$("input").addEventListener("keydown", (e) => {
-  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
-});
+$("input").addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } });
 $("btn-send").addEventListener("click", () => send());
 $("btn-retry").addEventListener("click", () => consult());
 
@@ -421,14 +499,13 @@ function renderMessages() {
   current.messages.forEach((m) => box.appendChild(msgEl(m)));
   $("end").scrollIntoView();
 }
-
 function send(text) {
   const content = (text ?? $("input").value).trim();
   if (!content || loading || !current) return;
   $("input").value = "";
   refreshSend();
   current.messages.push({ role: "user", content });
-  saveCurrent();
+  Store.saveSession(current).catch(() => {});
   $("messages").appendChild(msgEl(current.messages.at(-1)));
   $("end").scrollIntoView({ behavior: "smooth" });
   consult();
@@ -437,8 +514,6 @@ function send(text) {
 async function consult() {
   $("error").style.display = "none";
   setLoading(true);
-
-  // bloco vivo onde o texto vai chegando
   const live = document.createElement("div");
   live.className = "msg-oracle";
   live.innerHTML = '<div class="rule"></div><div class="text"><span class="cursor"></span></div>';
@@ -453,14 +528,10 @@ async function consult() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ system: SYSTEM(current.ctx), messages: current.messages }),
     });
-    if (!r.ok) {
-      const d = await r.json().catch(() => ({}));
-      throw new Error(d.error || "erro");
-    }
+    if (!r.ok) { const d = await r.json().catch(() => ({})); throw new Error(d.error || "erro"); }
     const reader = r.body.getReader();
     const decoder = new TextDecoder();
-    let buffer = "";
-    let lastPaint = 0;
+    let buffer = "", lastPaint = 0;
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
@@ -475,7 +546,7 @@ async function consult() {
           const ev = JSON.parse(payload);
           if (ev.error) throw new Error(ev.error);
           if (ev.t) full += ev.t;
-        } catch (e) { if (e.message !== "Unexpected token") throw e; }
+        } catch (e) { if (e instanceof SyntaxError) continue; throw e; }
       }
       const now = performance.now();
       if (now - lastPaint > 80) {
@@ -487,8 +558,8 @@ async function consult() {
     if (!full.trim()) throw new Error("vazio");
     liveText.innerHTML = md(full);
     current.messages.push({ role: "assistant", content: full });
-    saveCurrent();
-  } catch (e) {
+    Store.saveSession(current).catch(() => {});
+  } catch {
     live.remove();
     $("error-text").textContent = "O Oráculo não respondeu.";
     $("error").style.display = "block";
@@ -498,7 +569,7 @@ async function consult() {
   }
 }
 
-// ---------- Exportar PDF ----------
+/* ============ Exportar PDF ============ */
 $("btn-pdf").addEventListener("click", () => {
   if (!current) return;
   const area = $("print-area");
@@ -517,11 +588,13 @@ $("btn-pdf").addEventListener("click", () => {
 });
 function escapeHtml(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
 
-// ---------- Flashcards + revisão espaçada (SM-2 simplificado) ----------
-function refreshDueBadge() {
-  const due = store.cards.filter((c) => c.due <= Date.now()).length;
-  $("due-badge").textContent = due;
-  $("btn-review").style.opacity = due ? 1 : 0.55;
+/* ============ Flashcards + revisão espaçada ============ */
+async function refreshDueBadge() {
+  try {
+    const due = (await Store.listDueCards()).length;
+    $("due-badge").textContent = due;
+    $("btn-review").style.opacity = due ? 1 : 0.55;
+  } catch {}
 }
 
 async function generateCards() {
@@ -533,30 +606,25 @@ async function generateCards() {
   try {
     const excerpt = oracleMsgs.slice(-4).map((m) => m.content).join("\n\n---\n\n");
     const r = await fetch("/api/flashcards", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ tema: current.ctx.tema, excerpt }),
     });
     const d = await r.json();
     if (!r.ok || d.error) throw new Error(d.error || "erro");
     const now = Date.now();
-    const cards = store.cards;
-    for (const c of d.cards) {
-      cards.push({ id: uid(), sessionId: current.id, q: c.q, a: c.a, due: now, interval: 0, ease: 2.5, reps: 0 });
-    }
-    store.cards = cards;
+    await Store.addCards(d.cards.map((c) => ({ id: uid(), sessionId: current.id, q: c.q, a: c.a, due: now, ivl: 0, ease: 2.5, reps: 0 })));
     refreshDueBadge();
     alert(`${d.cards.length} flashcards criados. Toque em "Revisar" no topo para estudar.`);
   } catch {
     alert("Não foi possível gerar os flashcards. Tente novamente.");
   } finally {
-    flashBtn.textContent = "🃏 Gerar flashcards";
+    flashBtn.textContent = "🃏 Flashcards";
     setLoading(false);
   }
 }
 
-$("btn-review").addEventListener("click", () => {
-  reviewQueue = store.cards.filter((c) => c.due <= Date.now());
+$("btn-review").addEventListener("click", async () => {
+  reviewQueue = await Store.listDueCards();
   if (!reviewQueue.length) return alert("Nenhum cartão vencido agora. Volte mais tarde — a memória agradece o intervalo.");
   show("cards");
   nextCard();
@@ -594,30 +662,167 @@ function nextCard() {
   stage.querySelector(".g2").addEventListener("click", () => grade(card, 2));
 }
 
-// SM-2 simplificado: Errei → volta pra fila em 10 min; Difícil/Fácil → intervalo cresce
 function grade(card, g) {
   const DAY = 86400000;
   if (g === 0) {
-    card.reps = 0; card.interval = 0;
+    card.reps = 0; card.ivl = 0;
     card.ease = Math.max(1.3, card.ease - 0.2);
     card.due = Date.now() + 10 * 60000;
   } else {
     card.reps += 1;
-    if (card.reps === 1) card.interval = 1;
-    else if (card.reps === 2) card.interval = g === 2 ? 4 : 2;
-    else card.interval = Math.round(card.interval * (g === 2 ? card.ease : Math.max(1.2, card.ease - 0.35)));
+    if (card.reps === 1) card.ivl = 1;
+    else if (card.reps === 2) card.ivl = g === 2 ? 4 : 2;
+    else card.ivl = Math.round(card.ivl * (g === 2 ? card.ease : Math.max(1.2, card.ease - 0.35)));
     if (g === 2) card.ease = Math.min(3.0, card.ease + 0.05);
-    card.due = Date.now() + card.interval * DAY;
+    card.due = Date.now() + card.ivl * DAY;
   }
-  const all = store.cards.map((c) => (c.id === card.id ? card : c));
-  store.cards = all;
+  Store.updateCard(card).catch(() => {});
   reviewQueue.shift();
   nextCard();
 }
 
-// ---------- Início ----------
-renderHome();
-refreshDueBadge();
+/* ============ MODO DUELO ============ */
+const DUEL_TIME = 20; // segundos por pergunta
+let duel = null;
+
+async function startDuel() {
+  if (!current || loading) return;
+  show("duel");
+  $("duel-stage").innerHTML = '<div class="duel-center"><div class="title display">⚔️ MODO DUELO</div><p class="sub2">O Oráculo forja as 5 perguntas…</p></div>';
+  document.body.classList.add("thinking");
+  try {
+    const oracleMsgs = current.messages.filter((m) => m.role === "assistant");
+    const excerpt = oracleMsgs.slice(-4).map((m) => m.content).join("\n\n---\n\n");
+    const r = await fetch("/api/duel", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tema: current.ctx.tema, nivel: current.ctx.nivel, excerpt }),
+    });
+    const d = await r.json();
+    if (!r.ok || d.error || !d.questions?.length) throw new Error(d.error || "erro");
+    duel = { questions: d.questions, i: 0, score: 0, streak: 0, hits: 0, best: 0, missed: [], timer: null, t: DUEL_TIME };
+    duelQuestion();
+  } catch {
+    $("duel-stage").innerHTML = '<div class="duel-center"><div class="title display">⚔️</div><p class="sub2">O Oráculo não conseguiu forjar o duelo. Volte e tente novamente.</p></div>';
+  } finally {
+    document.body.classList.remove("thinking");
+  }
+}
+
+function duelQuestion() {
+  const q = duel.questions[duel.i];
+  const letters = ["A", "B", "C", "D"];
+  const mult = duel.streak >= 3 ? 2 : duel.streak === 2 ? 1.5 : 1;
+  $("duel-stage").innerHTML = `
+    <div class="hud">
+      <span>Pergunta ${duel.i + 1}/${duel.questions.length}</span>
+      <span class="streak">${duel.streak >= 2 ? `🔥 sequência x${mult}` : ""}</span>
+      <span class="score">${duel.score}</span>
+    </div>
+    <div class="timerbar"><div class="fill" id="tfill"></div></div>
+    <div class="duel-q"></div>
+    <div id="opts"></div>
+    <div class="duel-why" id="why"></div>
+    <button class="btn-primary duel-next" id="next">Próxima</button>`;
+  document.querySelector(".duel-q").textContent = q.q;
+  const opts = $("opts");
+  q.options.forEach((opt, idx) => {
+    const b = document.createElement("button");
+    b.className = "opt";
+    b.innerHTML = `<span class="letter">${letters[idx]}</span><span class="otext"></span>`;
+    b.querySelector(".otext").textContent = opt;
+    b.addEventListener("click", () => answer(idx));
+    opts.appendChild(b);
+  });
+
+  duel.t = DUEL_TIME;
+  const fill = $("tfill");
+  duel.timer = setInterval(() => {
+    duel.t -= 0.1;
+    fill.style.width = Math.max(0, (duel.t / DUEL_TIME) * 100) + "%";
+    if (duel.t <= 0) answer(-1); // tempo esgotado
+  }, 100);
+}
+
+function answer(idx) {
+  clearInterval(duel.timer);
+  const q = duel.questions[duel.i];
+  const buttons = [...document.querySelectorAll(".opt")];
+  buttons.forEach((b) => (b.disabled = true));
+  buttons[q.correct]?.classList.add("right");
+
+  const hit = idx === q.correct;
+  if (hit) {
+    duel.streak += 1;
+    duel.hits += 1;
+    const mult = duel.streak >= 3 ? 2 : duel.streak === 2 ? 1.5 : 1;
+    duel.score += Math.round((100 + Math.max(0, duel.t) * 5) * mult);
+  } else {
+    if (idx >= 0) buttons[idx].classList.add("wrong");
+    duel.streak = 0;
+    duel.missed.push({ q: q.q, why: q.why, right: q.options[q.correct] });
+  }
+  document.querySelector(".hud .score").textContent = duel.score;
+
+  const why = $("why");
+  why.textContent = (hit ? "✓ " : idx === -1 ? "⏱ Tempo esgotado. " : "✗ ") + (q.why || "");
+  why.style.display = "block";
+  const next = $("next");
+  next.textContent = duel.i + 1 < duel.questions.length ? "Próxima" : "Ver resultado";
+  next.style.display = "block";
+  next.addEventListener("click", () => {
+    duel.i += 1;
+    if (duel.i < duel.questions.length) duelQuestion();
+    else duelEnd();
+  }, { once: true });
+}
+
+function duelEnd() {
+  const total = duel.questions.length;
+  const pct = duel.hits / total;
+  const rank = pct === 1 ? "S" : pct >= 0.8 ? "A" : pct >= 0.6 ? "B" : "C";
+  const verdict = {
+    S: "Domínio comprovado. O Oráculo se curva — por hoje.",
+    A: "Forte. Mas o Oráculo viu o gap. Ele está listado abaixo.",
+    B: "Reconhecimento superficial detectado. Os gaps abaixo são o seu próximo estudo.",
+    C: "Familiaridade não é domínio. Volte ao Oráculo, feche os gaps e duele de novo.",
+  }[rank];
+  const isRecord = duel.score > (current.duel_best || 0);
+  if (isRecord) {
+    current.duel_best = duel.score;
+    Store.saveSession(current).catch(() => {});
+  }
+  const gaps = duel.missed.map((m) =>
+    `<div class="g"><b>${escapeHtml(m.q)}</b>Certo: ${escapeHtml(m.right)}. ${escapeHtml(m.why || "")}</div>`
+  ).join("");
+  $("duel-stage").innerHTML = `
+    <div class="duel-center">
+      <div class="title display">⚔️ FIM DO DUELO</div>
+      <div class="rank display">${rank}</div>
+      <p class="sub2">${verdict}</p>
+      <div class="duel-stats">
+        <div><div class="n">${duel.score}</div><div class="l">Pontos${isRecord ? " 🏆" : ""}</div></div>
+        <div><div class="n">${duel.hits}/${total}</div><div class="l">Acertos</div></div>
+        <div><div class="n">${current.duel_best || duel.score}</div><div class="l">Recorde</div></div>
+      </div>
+      ${gaps ? `<div class="duel-gaps"><h3>Gaps revelados</h3>${gaps}</div>` : ""}
+      <button class="btn-primary" id="duel-again">Duelar de novo</button>
+    </div>`;
+  $("duel-again").addEventListener("click", startDuel);
+}
+
+/* ============ Início ============ */
+(async () => {
+  try {
+    const h = await fetch("/api/health").then((r) => r.json());
+    useDb = !!h.db;
+  } catch { useDb = false; }
+  $("db-dot").classList.toggle("on", useDb);
+  $("db-dot").title = useDb ? "Memória eterna (Postgres)" : "Memória local (este navegador)";
+  if (useDb) $("home-desc").textContent = "Cada tema tem seu próprio mentor. Suas sessões vivem na nuvem — acesse de qualquer dispositivo.";
+  await migrateLocalToDb();
+  renderHome();
+  refreshDueBadge();
+})();
 </script>
 </body>
 </html>
