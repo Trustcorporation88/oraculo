@@ -6,10 +6,12 @@
 <title>O Oráculo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.5/purify.min.js"></script>
 <style>
   :root {
     --bg: #0E0D12; --panel: #16141C; --panel-soft: #1C1923; --line: #2B2735;
-    --bone: #EDE8DC; --bone-dim: #A79F92; --gold: #C9A15A; --gold-soft: #8A6E3C; --ember: #C33B2E;
+    --bone: #EDE8DC; --bone-dim: #A79F92; --gold: #C9A15A; --gold-soft: #8A6E3C; --ember: #C33B2E; --sage: #7A9B76;
   }
   * { box-sizing: border-box; margin: 0; }
   body {
@@ -18,12 +20,10 @@
     min-height: 100vh; display: flex; flex-direction: column;
   }
   .display { font-family: 'Marcellus', Georgia, serif; }
+  button { font-family: inherit; }
 
-  header {
-    display: flex; align-items: center; gap: 12px;
-    padding: 14px 20px; border-bottom: 1px solid var(--line);
-  }
-  .eye { position: relative; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  header { display: flex; align-items: center; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--line); }
+  .eye { position: relative; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer; }
   .eye .ring1 { position: absolute; inset: 0; border: 1px solid var(--gold-soft); border-radius: 50%; }
   .eye .ring2 { position: absolute; inset: 8px; border: 1px solid var(--line); border-radius: 50%; }
   .eye .core { width: 10px; height: 10px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 6px var(--gold-soft); transition: box-shadow .4s; }
@@ -34,17 +34,38 @@
 
   header h1 { font-size: 20px; letter-spacing: .08em; }
   header .sub { font-size: 12px; color: var(--bone-dim); }
-  #btn-reset {
-    margin-left: auto; font-size: 12px; padding: 6px 12px; border-radius: 6px;
-    border: 1px solid var(--line); background: none; color: var(--bone-dim); cursor: pointer; display: none;
-  }
+  .hbtns { margin-left: auto; display: flex; gap: 8px; }
+  .hbtn { font-size: 12px; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--line); background: none; color: var(--bone-dim); cursor: pointer; }
+  .hbtn.gold { border-color: var(--gold-soft); color: var(--gold); }
+  .badge { display: inline-block; min-width: 16px; padding: 0 4px; margin-left: 5px; border-radius: 8px; background: var(--gold); color: #171308; font-size: 10px; font-weight: 600; text-align: center; }
 
   main { flex: 1; overflow-y: auto; }
   .wrap { max-width: 640px; margin: 0 auto; padding: 24px 16px; }
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* Home */
+  #home .lead { font-size: 26px; color: var(--gold); line-height: 1.3; margin-bottom: 6px; }
+  #home .desc { font-size: 14px; color: var(--bone-dim); margin-bottom: 20px; }
+  .session {
+    width: 100%; text-align: left; display: flex; align-items: center; gap: 12px;
+    padding: 14px 16px; margin-bottom: 10px; border-radius: 8px;
+    background: var(--panel-soft); border: 1px solid var(--line); color: var(--bone); cursor: pointer;
+  }
+  .session:hover { border-color: var(--gold-soft); }
+  .session .t { font-size: 15px; }
+  .session .m { font-size: 12px; color: var(--bone-dim); margin-top: 2px; }
+  .session .del { margin-left: auto; background: none; border: none; color: var(--bone-dim); font-size: 16px; cursor: pointer; padding: 4px 8px; }
+  .session .del:hover { color: var(--ember); }
+  .btn-primary {
+    width: 100%; padding: 13px; margin-top: 12px; font-size: 15px; letter-spacing: .14em; text-transform: uppercase;
+    font-family: 'Marcellus', Georgia, serif; border: none; border-radius: 6px;
+    background: var(--gold); color: #171308; cursor: pointer;
+  }
+  .btn-primary:disabled { background: var(--panel-soft); color: #5B5546; cursor: not-allowed; }
+  .empty { font-size: 14px; color: var(--bone-dim); padding: 20px 0; font-style: italic; }
 
   /* Setup */
-  #setup .lead { font-size: 26px; color: var(--gold); line-height: 1.3; margin-bottom: 8px; }
-  #setup .desc { font-size: 14px; color: var(--bone-dim); margin-bottom: 24px; }
   .field { display: block; margin-bottom: 16px; }
   .field span { display: block; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--bone-dim); margin-bottom: 4px; }
   .field input, .field textarea, .field select {
@@ -54,65 +75,97 @@
   .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--gold-soft); }
   ::placeholder { color: #6B6455; }
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  #btn-begin {
-    width: 100%; padding: 13px; margin-top: 8px; font-size: 15px; letter-spacing: .14em; text-transform: uppercase;
-    font-family: 'Marcellus', Georgia, serif; border: none; border-radius: 6px;
-    background: var(--panel-soft); color: #5B5546; cursor: not-allowed; transition: background .2s;
-  }
-  #btn-begin.ready { background: var(--gold); color: #171308; cursor: pointer; }
 
   /* Chat */
-  #chat { display: none; }
   .msg-user { display: flex; justify-content: flex-end; margin-bottom: 20px; }
-  .msg-user .bubble {
-    max-width: 85%; padding: 10px 16px; font-size: 14px; white-space: pre-wrap;
-    background: var(--panel-soft); border: 1px solid var(--line); border-radius: 8px;
-  }
+  .msg-user .bubble { max-width: 85%; padding: 10px 16px; font-size: 14px; white-space: pre-wrap; background: var(--panel-soft); border: 1px solid var(--line); border-radius: 8px; }
   .msg-oracle { display: flex; gap: 12px; margin-bottom: 20px; }
   .msg-oracle .rule { width: 2px; flex-shrink: 0; background: linear-gradient(var(--gold), transparent); margin-top: 4px; }
-  .msg-oracle .text { max-width: 92%; font-size: 15px; line-height: 1.6; white-space: pre-wrap; }
-  #status { display: none; align-items: center; gap: 12px; margin-bottom: 20px; }
-  #status .rule { width: 2px; height: 20px; background: var(--gold); }
-  #status span { font-size: 14px; font-style: italic; color: var(--bone-dim); }
+  .msg-oracle .text { max-width: 92%; font-size: 15px; line-height: 1.6; overflow-wrap: break-word; }
+  .text p, .text ul, .text ol, .text blockquote, .text pre { margin-bottom: 10px; }
+  .text ul, .text ol { padding-left: 22px; }
+  .text h1, .text h2, .text h3 { font-family: 'Marcellus', Georgia, serif; color: var(--gold); margin: 14px 0 8px; font-size: 17px; letter-spacing: .04em; }
+  .text strong { color: var(--gold); font-weight: 600; }
+  .text code { background: var(--panel-soft); border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px; font-size: 13px; }
+  .text pre { background: var(--panel-soft); border: 1px solid var(--line); border-radius: 6px; padding: 10px; overflow-x: auto; }
+  .text pre code { border: none; padding: 0; }
+  .text blockquote { border-left: 2px solid var(--gold-soft); padding-left: 12px; color: var(--bone-dim); }
+  .cursor { display: inline-block; width: 8px; height: 15px; background: var(--gold); vertical-align: text-bottom; animation: blink 1s step-end infinite; }
+  @keyframes blink { 50% { opacity: 0 } }
   #error { display: none; font-size: 14px; padding: 10px 16px; border: 1px solid var(--ember); border-radius: 6px; margin-bottom: 20px; }
   #error button { background: none; border: none; color: var(--gold); text-decoration: underline; cursor: pointer; font-size: 14px; }
 
   footer { border-top: 1px solid var(--line); display: none; }
   .cmds { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; }
-  .cmds button {
-    flex-shrink: 0; font-size: 12px; padding: 6px 12px; border-radius: 999px;
-    border: 1px solid var(--gold-soft); background: none; color: var(--gold); cursor: pointer;
-  }
+  .cmds button { flex-shrink: 0; font-size: 12px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--gold-soft); background: none; color: var(--gold); cursor: pointer; }
   .cmds button:disabled { opacity: .4; cursor: default; }
+  .cmds button.util { border-color: var(--line); color: var(--bone-dim); }
   .inputrow { display: flex; gap: 8px; }
-  #input {
-    flex: 1; padding: 11px 12px; font-size: 14px; font-family: inherit;
-    background: var(--panel-soft); border: 1px solid var(--line); border-radius: 6px; color: var(--bone); outline: none; resize: none;
-  }
+  #input { flex: 1; padding: 11px 12px; font-size: 14px; font-family: inherit; background: var(--panel-soft); border: 1px solid var(--line); border-radius: 6px; color: var(--bone); outline: none; resize: none; }
   #input:focus { border-color: var(--gold-soft); }
-  #btn-send {
-    padding: 0 18px; font-size: 13px; letter-spacing: .14em; text-transform: uppercase;
-    font-family: 'Marcellus', Georgia, serif; border: none; border-radius: 6px;
-    background: var(--panel-soft); color: #5B5546; cursor: default;
-  }
+  #btn-send { padding: 0 18px; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; font-family: 'Marcellus', Georgia, serif; border: none; border-radius: 6px; background: var(--panel-soft); color: #5B5546; cursor: default; }
   #btn-send.ready { background: var(--gold); color: #171308; cursor: pointer; }
+
+  /* Flashcards */
+  #cards .deck-info { font-size: 13px; color: var(--bone-dim); margin-bottom: 16px; }
+  .card {
+    min-height: 220px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+    padding: 28px 22px; border-radius: 10px; background: var(--panel-soft); border: 1px solid var(--gold-soft); cursor: pointer;
+  }
+  .card .side { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--bone-dim); margin-bottom: 12px; }
+  .card .content { font-size: 17px; line-height: 1.5; }
+  .card.back .content { color: var(--gold); }
+  .grade { display: none; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 14px; }
+  .grade button { padding: 12px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel-soft); color: var(--bone); font-size: 14px; cursor: pointer; }
+  .grade .g0:hover { border-color: var(--ember); } .grade .g1:hover { border-color: var(--gold-soft); } .grade .g2:hover { border-color: var(--sage); }
+  .done { text-align: center; padding: 40px 0; }
+  .done .big { font-size: 22px; color: var(--gold); margin-bottom: 8px; }
+  .done p { font-size: 14px; color: var(--bone-dim); }
+
+  /* PDF / impressão */
+  #print-area { display: none; }
+  @media print {
+    body * { visibility: hidden; }
+    #print-area, #print-area * { visibility: visible; }
+    #print-area { display: block; position: absolute; top: 0; left: 0; width: 100%; background: #fff; color: #1a1a1a; font-family: Georgia, serif; padding: 40px; }
+    #print-area h1 { font-size: 22px; margin-bottom: 4px; }
+    #print-area .meta { font-size: 12px; color: #666; margin-bottom: 24px; }
+    #print-area .p-msg { margin-bottom: 18px; page-break-inside: avoid; }
+    #print-area .p-role { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #8a6e3c; margin-bottom: 4px; }
+    #print-area .p-body { font-size: 13px; line-height: 1.6; }
+    #print-area .p-body h1, #print-area .p-body h2, #print-area .p-body h3 { font-size: 15px; margin: 10px 0 6px; }
+    #print-area .p-body ul, #print-area .p-body ol { padding-left: 20px; margin-bottom: 8px; }
+  }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="eye"><div class="ring1"></div><div class="ring2"></div><div class="core"></div></div>
+  <div class="eye" id="btn-home" title="Início"><div class="ring1"></div><div class="ring2"></div><div class="core"></div></div>
   <div>
     <h1 class="display">O ORÁCULO</h1>
     <p class="sub" id="subtitle">Cinco mentes. Um mentor.</p>
   </div>
-  <button id="btn-reset">Nova consulta</button>
+  <div class="hbtns">
+    <button class="hbtn" id="btn-review" style="display:none">Revisar<span class="badge" id="due-badge">0</span></button>
+    <button class="hbtn" id="btn-pdf" style="display:none">Exportar PDF</button>
+    <button class="hbtn" id="btn-back" style="display:none">← Voltar</button>
+  </div>
 </header>
 
 <main>
-  <div class="wrap" id="setup">
-    <p class="lead display">Diga o que quer dominar.</p>
-    <p class="desc">O Oráculo revela o oculto, traça o caminho mais curto, ensina por perguntas e só libera avanço quando o domínio é real.</p>
+  <!-- HOME -->
+  <div class="wrap view active" id="home">
+    <p class="lead display">Seus Oráculos.</p>
+    <p class="desc">Cada tema tem seu próprio mentor, com memória da sessão e plano de domínio.</p>
+    <div id="session-list"></div>
+    <button class="btn-primary" id="btn-new">Novo Oráculo</button>
+  </div>
+
+  <!-- SETUP -->
+  <div class="wrap view" id="setup">
+    <p class="lead display" style="font-size:26px;color:var(--gold);margin-bottom:8px;">Diga o que quer dominar.</p>
+    <p class="desc" style="font-size:14px;color:var(--bone-dim);margin-bottom:24px;">O Oráculo revela o oculto, traça o caminho mais curto, ensina por perguntas e só libera avanço quando o domínio é real.</p>
     <label class="field"><span>Tema</span><input id="f-tema" placeholder="ex.: Tráfego pago no Instagram (Meta Ads)" /></label>
     <label class="field"><span>Por que quero dominar</span><textarea id="f-objetivo" rows="2" placeholder="ex.: rodar campanhas pros meus clientes sem queimar orçamento"></textarea></label>
     <div class="grid2">
@@ -125,14 +178,20 @@
       <label class="field"><span>Prazo</span><input id="f-prazo" value="6 semanas" /></label>
       <label class="field"><span>O que já sei (opcional)</span><input id="f-base" placeholder="ex.: já impulsionei posts" /></label>
     </div>
-    <button id="btn-begin" class="display">Consultar o Oráculo</button>
+    <button class="btn-primary" id="btn-begin" disabled>Consultar o Oráculo</button>
   </div>
 
-  <div class="wrap" id="chat">
+  <!-- CHAT -->
+  <div class="wrap view" id="chat">
     <div id="messages"></div>
-    <div id="status"><div class="rule"></div><span>O Oráculo consulta as cinco mentes…</span></div>
     <div id="error"><span id="error-text"></span> <button id="btn-retry">Tentar de novo</button></div>
     <div id="end"></div>
+  </div>
+
+  <!-- FLASHCARDS -->
+  <div class="wrap view" id="cards">
+    <p class="deck-info" id="deck-info"></p>
+    <div id="card-stage"></div>
   </div>
 </main>
 
@@ -146,8 +205,14 @@
   </div>
 </footer>
 
+<div id="print-area"></div>
+
 <script>
 const $ = (id) => document.getElementById(id);
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+
+marked.setOptions({ breaks: true, gfm: true });
+const md = (raw) => DOMPurify.sanitize(marked.parse(raw || ""));
 
 const COMMANDS = ["/revelar", "/plano", "/socratico", "/teste", "/gap", "/direto"];
 
@@ -201,13 +266,76 @@ FASE 4 — TESTE DE CONHECIMENTO REAL. Ao final de cada etapa, me teste em 3 ní
 4. No modo socrático, nunca entregue a resposta diretamente. Se eu pedir, responda com outra pergunta que me conduz até ela (exceto se eu usar /direto).
 5. Elogio fácil não serve. Se minha resposta tiver gap, aponte o gap antes de qualquer validação.
 6. Permaneça como O Oráculo durante toda a conversa.
-7. Responda sempre em português brasileiro, de forma direta e sem enrolação. Comece agora ativando a FASE 0.`;
+7. Use markdown na formatação: títulos, negrito e listas quando ajudarem a clareza.
+8. Responda sempre em português brasileiro, de forma direta e sem enrolação. Comece agora ativando a FASE 0.`;
 
-let ctx = null;
-let messages = [];
+// ---------- Estado + armazenamento ----------
+const store = {
+  get sessions() { try { return JSON.parse(localStorage.getItem("oraculo.sessions")) || []; } catch { return []; } },
+  set sessions(v) { localStorage.setItem("oraculo.sessions", JSON.stringify(v)); },
+  get cards() { try { return JSON.parse(localStorage.getItem("oraculo.cards")) || []; } catch { return []; } },
+  set cards(v) { localStorage.setItem("oraculo.cards", JSON.stringify(v)); },
+};
+
+let current = null;   // sessão ativa
 let loading = false;
+let reviewQueue = [];
 
-// ----- Setup -----
+function saveCurrent() {
+  if (!current) return;
+  current.updatedAt = Date.now();
+  const all = store.sessions.filter((s) => s.id !== current.id);
+  all.unshift(current);
+  store.sessions = all;
+}
+
+// ---------- Navegação ----------
+function show(view) {
+  document.querySelectorAll(".view").forEach((v) => v.classList.remove("active"));
+  $(view).classList.add("active");
+  document.querySelector("footer").style.display = view === "chat" ? "block" : "none";
+  $("btn-back").style.display = view === "home" ? "none" : "inline-block";
+  $("btn-pdf").style.display = view === "chat" ? "inline-block" : "none";
+  $("btn-review").style.display = view === "chat" || view === "home" ? "inline-block" : "none";
+  if (view === "home") { $("subtitle").textContent = "Cinco mentes. Um mentor."; renderHome(); }
+  refreshDueBadge();
+}
+$("btn-home").addEventListener("click", () => show("home"));
+$("btn-back").addEventListener("click", () => show(current && $("cards").classList.contains("active") ? "chat" : "home"));
+
+// ---------- Home ----------
+function renderHome() {
+  const list = $("session-list");
+  const sessions = store.sessions;
+  list.innerHTML = "";
+  if (!sessions.length) {
+    list.innerHTML = '<p class="empty">Nenhum Oráculo ainda. Invoque o primeiro.</p>';
+    return;
+  }
+  for (const s of sessions) {
+    const el = document.createElement("div");
+    el.className = "session";
+    const dt = new Date(s.updatedAt).toLocaleDateString("pt-BR");
+    el.innerHTML = `<div><div class="t"></div><div class="m">${s.messages.length} mensagens · ${dt}</div></div><button class="del" title="Apagar">×</button>`;
+    el.querySelector(".t").textContent = s.ctx.tema;
+    el.addEventListener("click", () => openSession(s.id));
+    el.querySelector(".del").addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (!confirm(`Apagar o Oráculo de "${s.ctx.tema}"?`)) return;
+      store.sessions = store.sessions.filter((x) => x.id !== s.id);
+      store.cards = store.cards.filter((c) => c.sessionId !== s.id);
+      renderHome(); refreshDueBadge();
+    });
+    list.appendChild(el);
+  }
+}
+$("btn-new").addEventListener("click", () => {
+  ["f-tema", "f-objetivo", "f-base"].forEach((id) => ($(id).value = ""));
+  $("btn-begin").disabled = true;
+  show("setup");
+});
+
+// ---------- Setup ----------
 function readCtx() {
   return {
     tema: $("f-tema").value.trim(),
@@ -218,45 +346,52 @@ function readCtx() {
     base: $("f-base").value.trim(),
   };
 }
-function refreshBegin() {
-  const c = readCtx();
-  $("btn-begin").classList.toggle("ready", !!(c.tema && c.objetivo));
-}
-["f-tema", "f-objetivo"].forEach((id) => $(id).addEventListener("input", refreshBegin));
-
+["f-tema", "f-objetivo"].forEach((id) =>
+  $(id).addEventListener("input", () => {
+    const c = readCtx();
+    $("btn-begin").disabled = !(c.tema && c.objetivo);
+  })
+);
 $("btn-begin").addEventListener("click", () => {
   const c = readCtx();
   if (!c.tema || !c.objetivo) return;
-  ctx = c;
-  $("setup").style.display = "none";
-  $("chat").style.display = "block";
-  document.querySelector("footer").style.display = "block";
-  $("btn-reset").style.display = "block";
-  $("subtitle").textContent = c.tema;
-  messages = [{ role: "user", content: "Estou pronto. Ative a FASE 0 e inicie o diagnóstico." }];
-  render();
+  current = { id: uid(), ctx: c, messages: [], createdAt: Date.now(), updatedAt: Date.now() };
+  current.messages.push({ role: "user", content: "Estou pronto. Ative a FASE 0 e inicie o diagnóstico." });
+  saveCurrent();
+  openChat();
   consult();
 });
 
-$("btn-reset").addEventListener("click", () => location.reload());
+function openSession(id) {
+  current = store.sessions.find((s) => s.id === id);
+  if (!current) return;
+  openChat();
+}
+function openChat() {
+  $("subtitle").textContent = current.ctx.tema;
+  show("chat");
+  renderMessages();
+}
 
-// ----- Chat -----
+// ---------- Chat ----------
 COMMANDS.forEach((cmd) => {
   const b = document.createElement("button");
   b.textContent = cmd;
   b.addEventListener("click", () => send(cmd));
   $("cmds").appendChild(b);
 });
+const flashBtn = document.createElement("button");
+flashBtn.textContent = "🃏 Gerar flashcards";
+flashBtn.className = "util";
+flashBtn.addEventListener("click", generateCards);
+$("cmds").appendChild(flashBtn);
 
 function setLoading(v) {
   loading = v;
   document.body.classList.toggle("thinking", v);
-  $("status").style.display = v ? "flex" : "none";
   document.querySelectorAll(".cmds button").forEach((b) => (b.disabled = v));
   refreshSend();
-  $("end").scrollIntoView({ behavior: "smooth" });
 }
-
 function refreshSend() {
   $("btn-send").classList.toggle("ready", !loading && !!$("input").value.trim());
 }
@@ -267,55 +402,222 @@ $("input").addEventListener("keydown", (e) => {
 $("btn-send").addEventListener("click", () => send());
 $("btn-retry").addEventListener("click", () => consult());
 
-function render() {
+function msgEl(m) {
+  const el = document.createElement("div");
+  if (m.role === "user") {
+    el.className = "msg-user";
+    el.innerHTML = '<div class="bubble"></div>';
+    el.querySelector(".bubble").textContent = m.content;
+  } else {
+    el.className = "msg-oracle";
+    el.innerHTML = '<div class="rule"></div><div class="text"></div>';
+    el.querySelector(".text").innerHTML = md(m.content);
+  }
+  return el;
+}
+function renderMessages() {
   const box = $("messages");
   box.innerHTML = "";
-  for (const m of messages) {
-    const el = document.createElement("div");
-    if (m.role === "user") {
-      el.className = "msg-user";
-      el.innerHTML = '<div class="bubble"></div>';
-      el.querySelector(".bubble").textContent = m.content;
-    } else {
-      el.className = "msg-oracle";
-      el.innerHTML = '<div class="rule"></div><div class="text"></div>';
-      el.querySelector(".text").textContent = m.content;
-    }
-    box.appendChild(el);
-  }
-  $("end").scrollIntoView({ behavior: "smooth" });
+  current.messages.forEach((m) => box.appendChild(msgEl(m)));
+  $("end").scrollIntoView();
 }
 
 function send(text) {
   const content = (text ?? $("input").value).trim();
-  if (!content || loading) return;
+  if (!content || loading || !current) return;
   $("input").value = "";
   refreshSend();
-  messages.push({ role: "user", content });
-  render();
+  current.messages.push({ role: "user", content });
+  saveCurrent();
+  $("messages").appendChild(msgEl(current.messages.at(-1)));
+  $("end").scrollIntoView({ behavior: "smooth" });
   consult();
 }
 
 async function consult() {
   $("error").style.display = "none";
   setLoading(true);
+
+  // bloco vivo onde o texto vai chegando
+  const live = document.createElement("div");
+  live.className = "msg-oracle";
+  live.innerHTML = '<div class="rule"></div><div class="text"><span class="cursor"></span></div>';
+  $("messages").appendChild(live);
+  const liveText = live.querySelector(".text");
+  $("end").scrollIntoView({ behavior: "smooth" });
+
+  let full = "";
   try {
-    const r = await fetch("/api/oracle", {
+    const r = await fetch("/api/oracle/stream", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ system: SYSTEM(ctx), messages }),
+      body: JSON.stringify({ system: SYSTEM(current.ctx), messages: current.messages }),
     });
-    const data = await r.json();
-    if (!r.ok || data.error) throw new Error(data.error || "erro");
-    messages.push({ role: "assistant", content: data.text || "…" });
-    render();
+    if (!r.ok) {
+      const d = await r.json().catch(() => ({}));
+      throw new Error(d.error || "erro");
+    }
+    const reader = r.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let lastPaint = 0;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop();
+      for (const line of lines) {
+        if (!line.startsWith("data:")) continue;
+        const payload = line.slice(5).trim();
+        if (payload === "[DONE]") continue;
+        try {
+          const ev = JSON.parse(payload);
+          if (ev.error) throw new Error(ev.error);
+          if (ev.t) full += ev.t;
+        } catch (e) { if (e.message !== "Unexpected token") throw e; }
+      }
+      const now = performance.now();
+      if (now - lastPaint > 80) {
+        liveText.innerHTML = md(full) + '<span class="cursor"></span>';
+        $("end").scrollIntoView({ behavior: "smooth" });
+        lastPaint = now;
+      }
+    }
+    if (!full.trim()) throw new Error("vazio");
+    liveText.innerHTML = md(full);
+    current.messages.push({ role: "assistant", content: full });
+    saveCurrent();
   } catch (e) {
+    live.remove();
     $("error-text").textContent = "O Oráculo não respondeu.";
     $("error").style.display = "block";
   } finally {
     setLoading(false);
+    $("end").scrollIntoView({ behavior: "smooth" });
   }
 }
+
+// ---------- Exportar PDF ----------
+$("btn-pdf").addEventListener("click", () => {
+  if (!current) return;
+  const area = $("print-area");
+  const c = current.ctx;
+  area.innerHTML = `<h1>O Oráculo — ${escapeHtml(c.tema)}</h1>
+    <div class="meta">Objetivo: ${escapeHtml(c.objetivo)} · Nível: ${escapeHtml(c.nivel)} · ${escapeHtml(c.tempo)}/dia · Prazo: ${escapeHtml(c.prazo)} · Exportado em ${new Date().toLocaleDateString("pt-BR")}</div>`;
+  for (const m of current.messages) {
+    const d = document.createElement("div");
+    d.className = "p-msg";
+    d.innerHTML = `<div class="p-role">${m.role === "user" ? "Aprendiz" : "O Oráculo"}</div><div class="p-body"></div>`;
+    if (m.role === "user") d.querySelector(".p-body").textContent = m.content;
+    else d.querySelector(".p-body").innerHTML = md(m.content);
+    area.appendChild(d);
+  }
+  window.print();
+});
+function escapeHtml(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+
+// ---------- Flashcards + revisão espaçada (SM-2 simplificado) ----------
+function refreshDueBadge() {
+  const due = store.cards.filter((c) => c.due <= Date.now()).length;
+  $("due-badge").textContent = due;
+  $("btn-review").style.opacity = due ? 1 : 0.55;
+}
+
+async function generateCards() {
+  if (!current || loading) return;
+  const oracleMsgs = current.messages.filter((m) => m.role === "assistant");
+  if (!oracleMsgs.length) return alert("Estude um pouco com o Oráculo antes de gerar flashcards.");
+  setLoading(true);
+  flashBtn.textContent = "🃏 Gerando…";
+  try {
+    const excerpt = oracleMsgs.slice(-4).map((m) => m.content).join("\n\n---\n\n");
+    const r = await fetch("/api/flashcards", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tema: current.ctx.tema, excerpt }),
+    });
+    const d = await r.json();
+    if (!r.ok || d.error) throw new Error(d.error || "erro");
+    const now = Date.now();
+    const cards = store.cards;
+    for (const c of d.cards) {
+      cards.push({ id: uid(), sessionId: current.id, q: c.q, a: c.a, due: now, interval: 0, ease: 2.5, reps: 0 });
+    }
+    store.cards = cards;
+    refreshDueBadge();
+    alert(`${d.cards.length} flashcards criados. Toque em "Revisar" no topo para estudar.`);
+  } catch {
+    alert("Não foi possível gerar os flashcards. Tente novamente.");
+  } finally {
+    flashBtn.textContent = "🃏 Gerar flashcards";
+    setLoading(false);
+  }
+}
+
+$("btn-review").addEventListener("click", () => {
+  reviewQueue = store.cards.filter((c) => c.due <= Date.now());
+  if (!reviewQueue.length) return alert("Nenhum cartão vencido agora. Volte mais tarde — a memória agradece o intervalo.");
+  show("cards");
+  nextCard();
+});
+
+function nextCard() {
+  const stage = $("card-stage");
+  $("deck-info").textContent = `${reviewQueue.length} cartão(ões) para revisar`;
+  if (!reviewQueue.length) {
+    stage.innerHTML = '<div class="done"><div class="big display">Revisão concluída.</div><p>O Oráculo reagendou cada cartão conforme sua resposta. Volte quando o próximo vencer.</p></div>';
+    refreshDueBadge();
+    return;
+  }
+  const card = reviewQueue[0];
+  stage.innerHTML = `
+    <div class="card" id="the-card">
+      <div class="side">Pergunta — toque para revelar</div>
+      <div class="content"></div>
+    </div>
+    <div class="grade" id="grade">
+      <button class="g0">Errei</button>
+      <button class="g1">Difícil</button>
+      <button class="g2">Fácil</button>
+    </div>`;
+  stage.querySelector(".content").textContent = card.q;
+  const el = $("the-card");
+  el.addEventListener("click", () => {
+    el.classList.add("back");
+    el.querySelector(".side").textContent = "Resposta";
+    el.querySelector(".content").textContent = card.a;
+    $("grade").style.display = "grid";
+  }, { once: true });
+  stage.querySelector(".g0").addEventListener("click", () => grade(card, 0));
+  stage.querySelector(".g1").addEventListener("click", () => grade(card, 1));
+  stage.querySelector(".g2").addEventListener("click", () => grade(card, 2));
+}
+
+// SM-2 simplificado: Errei → volta pra fila em 10 min; Difícil/Fácil → intervalo cresce
+function grade(card, g) {
+  const DAY = 86400000;
+  if (g === 0) {
+    card.reps = 0; card.interval = 0;
+    card.ease = Math.max(1.3, card.ease - 0.2);
+    card.due = Date.now() + 10 * 60000;
+  } else {
+    card.reps += 1;
+    if (card.reps === 1) card.interval = 1;
+    else if (card.reps === 2) card.interval = g === 2 ? 4 : 2;
+    else card.interval = Math.round(card.interval * (g === 2 ? card.ease : Math.max(1.2, card.ease - 0.35)));
+    if (g === 2) card.ease = Math.min(3.0, card.ease + 0.05);
+    card.due = Date.now() + card.interval * DAY;
+  }
+  const all = store.cards.map((c) => (c.id === card.id ? card : c));
+  store.cards = all;
+  reviewQueue.shift();
+  nextCard();
+}
+
+// ---------- Início ----------
+renderHome();
+refreshDueBadge();
 </script>
 </body>
 </html>
